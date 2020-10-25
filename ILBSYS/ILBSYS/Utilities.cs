@@ -52,7 +52,7 @@ namespace ILBSYS
         /// <param name="index">Index of the server to select</param>
         static public void SetSelectedServerIndex(int index)
         {
-            this.SelectedServerIndex = index;
+            SelectedServerIndex = index;
         }
 
         /// <summary>
