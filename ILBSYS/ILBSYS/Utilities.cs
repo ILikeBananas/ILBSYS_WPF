@@ -14,16 +14,16 @@ namespace ILBSYS
 {
     static class Utilities
     {
-        static private Server[] Servers;
+        static private List<Server> Servers = new List<Server>();
         static private int SelectedServerIndex = -1;
         static private bool HostsUpdated = false;
-        static private string[] Hosts = new string[0];
+        static private List<string> Hosts = new List<string>();
 
         /// <summary>
         /// Returns all the servers
         /// </summary>
         /// <returns>Array of Server</returns>
-        static public Server[] GetAllServers()
+        static public List<Server> GetAllServers()
         {
             return Servers;
         }
@@ -34,7 +34,11 @@ namespace ILBSYS
         /// <param name="server">Server to add</param>
         static public void AddServer(Server server)
         {
-            Servers.Append(server);
+            Servers.Add(server);
+            if(Servers.Count == 1)
+            {
+                SetSelectedServerIndex(0);
+            }
         }
 
         /// <summary>
@@ -53,6 +57,8 @@ namespace ILBSYS
         static public void SetSelectedServerIndex(int index)
         {
             SelectedServerIndex = index;
+            InfluxDB.SetCurrentHost(GetSelectedServer().Name);
+            InfluxDB.SetCurrentServerAddress(GetSelectedServer().Address);
         }
 
         /// <summary>
@@ -77,7 +83,7 @@ namespace ILBSYS
         /// Returns the list of all hosts from the current server
         /// </summary>
         /// <returns></returns>
-        static public async Task<string[]> GetAllHostsAsync()
+        static public async Task<List<string>> GetAllHostsAsync()
         {
             if(HostsUpdated)
             {

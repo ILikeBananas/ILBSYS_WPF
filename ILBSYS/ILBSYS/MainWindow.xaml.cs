@@ -23,9 +23,13 @@ namespace ILBSYS
         public MainWindow()
         {
             InitializeComponent();
+            Utilities.AddServer(new Server("tower", "http://192.168.1.3:8086"));
+            //Utilities.SetSelectedServerIndex(0);
             InfluxDB.SetCurrentServerAddress("http://192.168.1.3:8086");
             this.UpdateHostList();
-            
+            this.PopulateServerList();
+
+
         }
 
         /// <summary>
@@ -33,15 +37,7 @@ namespace ILBSYS
         /// </summary>
         async public void UpdateHostList()
         {
-            string[] hosts = await Utilities.GetAllHostsAsync();
-            List<Host> hostsList = new List<Host>();
-            
-            for(int i = 0; i < hosts.Length; i++)
-            {
-                hostsList.Add(new Host(hosts[i]));
-            }
-
-            dgHosts.ItemsSource = hostsList;
+            dgHosts.ItemsSource = await Utilities.GetAllHostsAsync(); ;
         }
 
         /// <summary>
@@ -54,6 +50,39 @@ namespace ILBSYS
             {
                 Name = name;
             }
+        }
+
+        private void cbServers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Handles the button to add a server, opens a modal for it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_AddServer_Click(object sender, RoutedEventArgs e)
+        {
+            AddServer dlg = new AddServer();
+            dlg.Owner = this;
+            dlg.ShowDialog();
+        }
+
+        /// <summary>
+        /// Populates the server list with all the servers that are in the Utilities class
+        /// </summary>
+        public void PopulateServerList()
+        {
+            List<Server> serverList = Utilities.GetAllServers();
+            cbServers.Items.Clear();
+            serverList.ForEach(delegate (Server server)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = server.Name;
+                item.Tag = server.Address;
+                cbServers.Items.Add(item);
+            });
         }
     }
 }
