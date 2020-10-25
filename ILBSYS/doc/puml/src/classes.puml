@@ -1,0 +1,38 @@
+
+@startuml
+
+class Server {
+    - Address: String
+    - Name: String
+
+    + getServerAddress() : String
+    + GetServerName() : String
+
+
+}
+
+class Utilities <<static>> {
+    - {static} Servers: Server[]
+    - {static} SelectedServerIndex: int
+    - {static} Hosts: string[]
+    - {static} HostsUpdated: bool
+
+    + {static} AddServer(server: Server): void
+    + {static} SetCurrentServer(server: Server): void
+    + {static} SetCurrentServer(index: int): void
+    + {static} GetCurrentServer(): Server
+    + {static} GetServerByName(name: String): Server
+    + {static} GetAllHosts() : string[]
+}
+
+class InfluxDB {
+    + GetRamUsage(server: Server): float
+    + GetCPUUsage(server: Server): float
+    + GetUptime(server: Server): float
+    + GetAllHosts(): string[]
+}
+
+Server *-- Utilities
+InfluxDB --o Server
+
+@enduml
