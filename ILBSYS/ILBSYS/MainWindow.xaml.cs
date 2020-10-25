@@ -23,6 +23,37 @@ namespace ILBSYS
         public MainWindow()
         {
             InitializeComponent();
+            InfluxDB.SetCurrentServerAddress("http://192.168.1.3:8086");
+            this.UpdateHostList();
+            
+        }
+
+        /// <summary>
+        /// Updates the host list in the datagrid
+        /// </summary>
+        async public void UpdateHostList()
+        {
+            string[] hosts = await Utilities.GetAllHostsAsync();
+            List<Host> hostsList = new List<Host>();
+            
+            for(int i = 0; i < hosts.Length; i++)
+            {
+                hostsList.Add(new Host(hosts[i]));
+            }
+
+            dgHosts.ItemsSource = hostsList;
+        }
+
+        /// <summary>
+        /// Just a class for the hosts
+        /// </summary>
+        public class Host
+        {
+            public string Name { get; set; }
+            public Host(string name)
+            {
+                Name = name;
+            }
         }
     }
 }
