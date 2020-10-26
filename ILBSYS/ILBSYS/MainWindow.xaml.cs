@@ -24,8 +24,6 @@ namespace ILBSYS
         {
             InitializeComponent();
             Utilities.AddServer(new Server("tower", "http://192.168.1.3:8086"));
-            //Utilities.SetSelectedServerIndex(0);
-            InfluxDB.SetCurrentServerAddress("http://192.168.1.3:8086");
             this.UpdateHostList();
             this.PopulateServerList();
 
@@ -37,24 +35,29 @@ namespace ILBSYS
         /// </summary>
         async public void UpdateHostList()
         {
-            dgHosts.ItemsSource = await Utilities.GetAllHostsAsync(); ;
+            try
+            {
+                dgHosts.ItemsSource = await Utilities.GetAllHostsAsync(); ;
+            } catch(Exception e)
+            {
+
+            }
+            
         }
 
         /// <summary>
-        /// Just a class for the hosts
+        /// Changes the current server as soon as the user clicks on one
         /// </summary>
-        public class Host
-        {
-            public string Name { get; set; }
-            public Host(string name)
-            {
-                Name = name;
-            }
-        }
-
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbServers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            //Console.WriteLine(cbServers.SelectedItem.ToString());
+            if(cbServers.SelectedIndex != -1)
+            {
+                Utilities.SetSelectedServerIndex(cbServers.SelectedIndex);
+                this.UpdateHostList();
+            }
         }
 
         /// <summary>
@@ -75,7 +78,13 @@ namespace ILBSYS
         public void PopulateServerList()
         {
             List<Server> serverList = Utilities.GetAllServers();
+            
+            // Saves the current selected index before clearing the itemList
+            int previousIndex = cbServers.SelectedIndex;
+
             cbServers.Items.Clear();
+
+            // Adding each server to the server combobox
             serverList.ForEach(delegate (Server server)
             {
                 ComboBoxItem item = new ComboBoxItem();
@@ -83,6 +92,21 @@ namespace ILBSYS
                 item.Tag = server.Address;
                 cbServers.Items.Add(item);
             });
+
+            // Setting the old selected item in the combobox
+            cbServers.SelectedIndex = previousIndex;
+        }
+    }
+
+    /// <summary>
+    /// Just a class for the hosts
+    /// </summary>
+    public class Host
+    {
+        public string Name { get; set; }
+        public Host(string name)
+        {
+            Name = name;
         }
     }
 }

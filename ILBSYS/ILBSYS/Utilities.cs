@@ -59,6 +59,7 @@ namespace ILBSYS
             SelectedServerIndex = index;
             InfluxDB.SetCurrentHost(GetSelectedServer().Name);
             InfluxDB.SetCurrentServerAddress(GetSelectedServer().Address);
+            HostsUpdated = false;
         }
 
         /// <summary>
