@@ -96,7 +96,7 @@ namespace ILBSYS
         /// Returns all the hosts from the server
         /// </summary>
         /// <returns>string array of hostnames on the server</returns>
-        static public async Task<List<string>> GetAllHostsAsync()
+        static public async Task<List<Host>> GetAllHostsAsync()
         {
             Console.WriteLine("Starting");
             InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
@@ -104,10 +104,10 @@ namespace ILBSYS
             var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"uptime\") FROM \"system\" GROUP BY \"host\"");
             var result = response.Results[0];
             var series = result.Series[0];
-            List<string> hosts = new List<string>();
+            List<Host> hosts = new List<Host>();
             for(int i = 0; i < series.GroupedTags.Count; i++)
             {
-                hosts.Add(series.GroupedTags.ElementAt(i).Value.ToString());
+                hosts.Add(new Host(series.GroupedTags.ElementAt(i).Value.ToString()));
             }
 
             return hosts;

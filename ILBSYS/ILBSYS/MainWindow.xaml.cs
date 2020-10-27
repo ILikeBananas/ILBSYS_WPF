@@ -37,7 +37,10 @@ namespace ILBSYS
         {
             try
             {
-                dgHosts.ItemsSource = await Utilities.GetAllHostsAsync(); ;
+                dgHosts.Items.Clear();
+                List<Host> hosts = await Utilities.GetAllHostsAsync(); ;
+                dgHosts.ItemsSource = hosts;
+
             } catch(Exception e)
             {
 

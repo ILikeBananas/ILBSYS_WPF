@@ -17,7 +17,7 @@ namespace ILBSYS
         static private List<Server> Servers = new List<Server>();
         static private int SelectedServerIndex = -1;
         static private bool HostsUpdated = false;
-        static private List<string> Hosts = new List<string>();
+        static private List<Host> Hosts = new List<Host>();
 
         /// <summary>
         /// Returns all the servers
@@ -84,7 +84,7 @@ namespace ILBSYS
         /// Returns the list of all hosts from the current server
         /// </summary>
         /// <returns></returns>
-        static public async Task<List<string>> GetAllHostsAsync()
+        static public async Task<List<Host>> GetAllHostsAsync()
         {
             if(HostsUpdated)
             {
@@ -92,11 +92,9 @@ namespace ILBSYS
             } else
             {
                 HostsUpdated = true;
-                return  await InfluxDB.GetAllHostsAsync();
+                Hosts = await InfluxDB.GetAllHostsAsync();
+                return Hosts;
             }
         }
-
-
-
     }
 }
