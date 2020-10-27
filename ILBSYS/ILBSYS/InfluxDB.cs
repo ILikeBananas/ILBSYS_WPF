@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Author : Jonny Hofmann
  * File : InfluxDB.cs
  * Utility : Class to make all the requests on the InfluxDB server
@@ -60,9 +60,23 @@ namespace ILBSYS
         /// Get the last CPU usage recorded on the Influx server for the current server
         /// </summary>
         /// <returns></returns>
-        static public double GetCPUUsage()
+        static public async Task<double> GetCPUUsage()
         {
-            return 0.0;
+            double cpuUsage = 0.0;
+            try
+            {
+                InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
+                //var response = client.ReadAsync<DynamicInfluxRow>("telegraf", "SHOW TAG VALUES WITH KEY=host");
+                var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"usage_idle\") from \"cpu\" WHERE (\"cpu\" = \'cpu-total\' AND \"host\" =\'" + CurrentHost + "\')");
+                var result = response.Results[0];
+                cpuUsage = (double)result.Series[0].Rows[0].Fields.Values.ElementAt(0);
+                Console.WriteLine("");
+            } catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
+            return cpuUsage;
         }
 
         /// <summary>
