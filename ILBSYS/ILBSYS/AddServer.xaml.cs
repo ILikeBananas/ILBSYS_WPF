@@ -38,7 +38,7 @@ namespace ILBSYS
             Utilities.AddServer(new Server(txtHostname.Text, "http://" + txtAddress.Text + ":8086"));
             MainWindow mainWindow = (MainWindow)Owner;
             mainWindow.PopulateServerList();
-
+            this.Close();
         }
     }
 }
