@@ -51,9 +51,23 @@ namespace ILBSYS
         /// Get the last RAM usage recorded on the Influx server for the current server 
         /// </summary>
         /// <returns></returns>
-        static public double GetRamUsage()
+        static public async Task<double> GetRamUsage()
         {
-            return 0.0;
+            double ramUsage = 0.0;
+            try
+            {
+                InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
+                //var response = client.ReadAsync<DynamicInfluxRow>("telegraf", "SHOW TAG VALUES WITH KEY=host");
+                var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"usage_percent\") from \"mem\" WHERE \"host\" =\'" + CurrentHost + "\')");
+                var result = response.Results[0];
+                ramUsage = (double)result.Series[0].Rows[0].Fields.Values.ElementAt(0);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return ramUsage;
         }
 
         /// <summary>
