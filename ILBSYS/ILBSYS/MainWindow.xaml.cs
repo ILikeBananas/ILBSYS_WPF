@@ -23,7 +23,7 @@ namespace ILBSYS
         public MainWindow()
         {
             InitializeComponent();
-            Utilities.AddServer(new Server("tower", "http://192.168.1.3:8086"));
+            //Utilities.AddServer(new Server("tower", "http://192.168.1.3:8086"));
             this.UpdateHostList();
             this.PopulateServerList();
 
@@ -98,6 +98,11 @@ namespace ILBSYS
 
             // Setting the old selected item in the combobox
             cbServers.SelectedIndex = previousIndex;
+
+            if(serverList.Count == 1 && previousIndex == -1)
+            {
+                cbServers.SelectedIndex = 0;
+            }
         }
     }
 
