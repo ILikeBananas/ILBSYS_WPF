@@ -9,7 +9,7 @@
     <Grid>
         <Label Content="ILBSYS" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,10,0,0" Height="44" Width="331" FontSize="24"/>
 
-        <ComboBox Name="cbServers" HorizontalAlignment="Left" Height="26" Margin="122,73,0,0" VerticalAlignment="Top" Width="196" SelectionChanged="cbServers_SelectionChanged">
+        <ComboBox Name="cbServers" HorizontalAlignment="Left" Height="26" Margin="16,73,0,0" VerticalAlignment="Top" Width="196" SelectionChanged="cbServers_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -18,17 +18,12 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ComboBox Name="cbStatsToDisplay" HorizontalAlignment="Left" Height="26" Margin="352,73,0,0" VerticalAlignment="Top" Width="196">
-            <ComboBoxItem IsSelected="True">CPU information</ComboBoxItem>
-            <ComboBoxItem>CPU utilization</ComboBoxItem>
-            <ComboBoxItem>Disk information</ComboBoxItem>
-        </ComboBox>
 
         <Label Content="Hosts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,104,0,0"/>
-        <DataGrid Name="dgHosts" HorizontalAlignment="Left" Height="129" VerticalAlignment="Top" Width="338" Margin="10,130,0,0"/>
+        <DataGrid Name="dgHosts" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="231" Margin="10,130,0,0"/>
 
-        <DataGrid Name="dgPCInfo" HorizontalAlignment="Left" Height="293" VerticalAlignment="Top" Width="406" Margin="353,104,0,0"/>
-        <Button x:Name="btn_AddServer" Content="+" HorizontalAlignment="Left" VerticalAlignment="Top" Width="24" Margin="323,73,0,0" Height="26" RenderTransformOrigin="5.477,2.722" Click="Btn_AddServer_Click"/>
+        <DataGrid Name="dgPCInfo" HorizontalAlignment="Left" Height="324" VerticalAlignment="Top" Width="513" Margin="246,73,0,0"/>
+        <Button x:Name="btn_AddServer" Content="+" HorizontalAlignment="Left" VerticalAlignment="Top" Width="24" Margin="217,73,0,0" Height="26" RenderTransformOrigin="5.477,2.722" Click="Btn_AddServer_Click"/>
 
 
     </Grid>
