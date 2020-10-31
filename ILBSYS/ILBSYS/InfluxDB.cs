@@ -168,6 +168,9 @@ namespace ILBSYS
         }
     }
 
+    /// <summary>
+    /// Class to stock computer infos
+    /// </summary>
     public class ComputerInfo
     {
         [InfluxTimestamp]

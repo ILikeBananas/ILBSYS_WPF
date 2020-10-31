@@ -20,7 +20,7 @@
         </ComboBox>
 
         <Label Content="Hosts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,104,0,0"/>
-        <DataGrid Name="dgHosts" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="231" Margin="10,130,0,0"/>
+        <DataGrid Name="dgHosts" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="231" Margin="10,130,0,0" SelectionChanged="dgHosts_SelectionChanged"/>
 
         <DataGrid Name="dgPCInfo" HorizontalAlignment="Left" Height="324" VerticalAlignment="Top" Width="513" Margin="246,73,0,0"/>
         <Button x:Name="btn_AddServer" Content="+" HorizontalAlignment="Left" VerticalAlignment="Top" Width="24" Margin="217,73,0,0" Height="26" RenderTransformOrigin="5.477,2.722" Click="Btn_AddServer_Click"/>
