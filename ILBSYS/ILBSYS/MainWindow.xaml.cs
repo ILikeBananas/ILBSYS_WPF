@@ -124,7 +124,7 @@ namespace ILBSYS
 
             // RAM usage
             double ramUsage = await InfluxDB.GetRamUsage();
-            infos.Add(new Infos("RAM Usage", ramUsage.ToString() + "%"));
+            infos.Add(new Infos("RAM Usage", ramUsage.ToString().Substring(0, 4) + "%"));
 
             dgPCInfo.ItemsSource = infos;
         }
