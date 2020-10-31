@@ -68,7 +68,7 @@ namespace ILBSYS
             {
                 InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
                 //var response = client.ReadAsync<DynamicInfluxRow>("telegraf", "SHOW TAG VALUES WITH KEY=host");
-                var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"usage_percent\") from \"mem\" WHERE \"host\" =\'" + CurrentHost + "\')");
+                var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"used_percent\") from \"mem\" WHERE \"host\" =\'" + CurrentHost + "\'");
                 var result = response.Results[0];
                 ramUsage = (double)result.Series[0].Rows[0].Fields.Values.ElementAt(0);
             }
@@ -94,12 +94,13 @@ namespace ILBSYS
                 var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"usage_idle\") from \"cpu\" WHERE (\"cpu\" = \'cpu-total\' AND \"host\" =\'" + CurrentHost + "\')");
                 var result = response.Results[0];
                 cpuUsage = (double)result.Series[0].Rows[0].Fields.Values.ElementAt(0);
-                Console.WriteLine("");
             } catch(Exception e)
             {
                 Console.WriteLine(e.Message);
             }
-            
+
+            // Change the usage from idle to current usage
+            cpuUsage = cpuUsage * -1 + 100;
             return cpuUsage;
         }
 
