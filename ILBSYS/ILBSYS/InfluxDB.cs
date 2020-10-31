@@ -26,6 +26,7 @@ namespace ILBSYS
     static class InfluxDB
     {
         static private string CurrentServerAddress;
+        static private string CurrentServerName;
         static private string CurrentHost;
 
         /// <summary>
@@ -36,6 +37,15 @@ namespace ILBSYS
         {
             CurrentServerAddress = address;
             
+        }
+
+        /// <summary>
+        /// Sets the current server name
+        /// </summary>
+        /// <param name="name">Name for the current server</param>
+        static public void SetCurrentServerName(string name)
+        {
+            CurrentServerName = name;
         }
 
         /// <summary>
@@ -97,9 +107,25 @@ namespace ILBSYS
         /// Get the uptime of the current server 
         /// </summary>
         /// <returns></returns>
-        static public int GetUptime()
+        async static public Task<int> GetUptime()
         {
-            return 0;
+            int uptime = 0;
+            try
+            {
+                InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
+                //var response = client.ReadAsync<DynamicInfluxRow>("telegraf", "SHOW TAG VALUES WITH KEY=host");
+                var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"uptime\") from \"system\" WHERE (\"host\" =\'" + CurrentHost + "\')");
+                var result = response.Results[0];
+                uptime = Int32.Parse(result.Series[0].Rows[0].Fields.Values.ElementAt(0).ToString());
+                //uptime = (int)result.Series[0].Rows[0].Fields.Values.ElementAt(0).ToString();
+                Console.WriteLine("Uptime : " + uptime);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return uptime;
         }
 
         /// <summary>
@@ -140,8 +166,6 @@ namespace ILBSYS
 
             return hosts;
         }
-
-        
     }
 
     public class ComputerInfo

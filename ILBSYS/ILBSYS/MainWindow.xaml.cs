@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -104,6 +105,41 @@ namespace ILBSYS
                 cbServers.SelectedIndex = 0;
             }
         }
+
+        /// <summary>
+        /// Asks for the data and puts it in the information datagrid
+        /// </summary>
+        async public void UpdateInfoDataGrid()
+        {
+            List<Infos> infos = new List<Infos>();
+            
+            // Uptime
+            int uptime = await InfluxDB.GetUptime();
+            int uptimeHours = uptime / 1000 / 60 / 60;
+            infos.Add(new Infos("Uptime", uptimeHours.ToString() + " hours"));
+
+            // CPU usage
+            double cpuUsage = await InfluxDB.GetCPUUsage();
+            infos.Add(new Infos("CPU Usage", cpuUsage.ToString().Substring(0, 4) + "%"));
+
+            // RAM usage
+            double ramUsage = await InfluxDB.GetRamUsage();
+            infos.Add(new Infos("RAM Usage", ramUsage.ToString() + "%"));
+
+            dgPCInfo.ItemsSource = infos;
+        }
+
+        /// <summary>
+        /// On selection changed, make the info grid update
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dgHosts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Host host= (Host)dgHosts.SelectedItem;
+            Utilities.SetCurrentHost(host.Name);
+            UpdateInfoDataGrid();
+        }
     }
 
     /// <summary>
@@ -116,5 +152,16 @@ namespace ILBSYS
         {
             Name = name;
         }
+    }
+
+    public class Infos
+    {
+        public Infos(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
+        public string Name { get; set; }
+        public string Value { get; set; }
     }
 }

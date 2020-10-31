@@ -57,7 +57,7 @@ namespace ILBSYS
         static public void SetSelectedServerIndex(int index)
         {
             SelectedServerIndex = index;
-            InfluxDB.SetCurrentHost(GetSelectedServer().Name);
+            InfluxDB.SetCurrentServerName(GetSelectedServer().Name);
             InfluxDB.SetCurrentServerAddress(GetSelectedServer().Address);
             HostsUpdated = false;
         }
@@ -95,6 +95,15 @@ namespace ILBSYS
                 Hosts = await InfluxDB.GetAllHostsAsync();
                 return Hosts;
             }
+        }
+
+        /// <summary>
+        /// Sets the current host
+        /// </summary>
+        /// <param name="name">Name of the current host</param>
+        static public void SetCurrentHost(string name)
+        {
+            InfluxDB.SetCurrentHost(name);
         }
     }
 }
