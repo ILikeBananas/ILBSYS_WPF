@@ -111,20 +111,24 @@ namespace ILBSYS
         /// </summary>
         async public void UpdateInfoDataGrid()
         {
-            List<Infos> infos = new List<Infos>();
+            List<Info> infos = new List<Info>();
             
             // Uptime
             int uptime = await InfluxDB.GetUptime();
             int uptimeHours = uptime / 1000 / 60 / 60;
-            infos.Add(new Infos("Uptime", uptimeHours.ToString() + " hours"));
+            infos.Add(new Info("Uptime", uptimeHours.ToString() + " hours"));
 
             // CPU usage
             double cpuUsage = await InfluxDB.GetCPUUsage();
-            infos.Add(new Infos("CPU Usage", cpuUsage.ToString().Substring(0, 4) + "%"));
+            infos.Add(new Info("CPU Usage", cpuUsage.ToString().Substring(0, 4) + "%"));
 
             // RAM usage
             double ramUsage = await InfluxDB.GetRamUsage();
-            infos.Add(new Infos("RAM Usage", ramUsage.ToString().Substring(0, 4) + "%"));
+            infos.Add(new Info("RAM Usage", ramUsage.ToString().Substring(0, 4) + "%"));
+
+            // Ram usage average over 24h
+            double ramUsage24h = await InfluxDB.GetRAMUsageAverage24h();
+            infos.Add(new Info("Average RAM usage (24h)", ramUsage24h.ToString().Substring(0, 4) + "%"));
 
             dgPCInfo.ItemsSource = infos;
         }
@@ -154,9 +158,9 @@ namespace ILBSYS
         }
     }
 
-    public class Infos
+    public class Info
     {
-        public Infos(string name, string value)
+        public Info(string name, string value)
         {
             Name = name;
             Value = value;

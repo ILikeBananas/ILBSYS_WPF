@@ -67,7 +67,6 @@ namespace ILBSYS
             try
             {
                 InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
-                //var response = client.ReadAsync<DynamicInfluxRow>("telegraf", "SHOW TAG VALUES WITH KEY=host");
                 var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"used_percent\") from \"mem\" WHERE \"host\" =\'" + CurrentHost + "\'");
                 var result = response.Results[0];
                 ramUsage = (double)result.Series[0].Rows[0].Fields.Values.ElementAt(0);
@@ -90,7 +89,6 @@ namespace ILBSYS
             try
             {
                 InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
-                //var response = client.ReadAsync<DynamicInfluxRow>("telegraf", "SHOW TAG VALUES WITH KEY=host");
                 var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"usage_idle\") from \"cpu\" WHERE (\"cpu\" = \'cpu-total\' AND \"host\" =\'" + CurrentHost + "\')");
                 var result = response.Results[0];
                 cpuUsage = (double)result.Series[0].Rows[0].Fields.Values.ElementAt(0);
@@ -133,7 +131,7 @@ namespace ILBSYS
         /// Gets in the database the cpu usage over the last 6 hours
         /// </summary>
         /// <returns>Array of UsageWithTime containing the points for the last 6 hours of cpu usage</returns>
-        static public UsageWithTime[] GetCPUOverTime()
+        static public UsageWithTime[] GetCPUUsageAverage24h()
         {
             return new UsageWithTime[0];
         }
@@ -142,9 +140,23 @@ namespace ILBSYS
         /// Gets in the database the ram usage over the last 6 hours
         /// </summary>
         /// <returns>Array of UsageWithTime containing the points for the last 6 hours of ram usage</returns>
-        static public UsageWithTime[] GetRAMOverTime()
+        static public async Task<Double> GetRAMUsageAverage24h()
         {
-            return new UsageWithTime[0];
+            double ramUsage = 0.0;
+            try
+            {
+                InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
+                var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT mean(\"used_percent\") FROM \"mem\" WHERE time >= now() - 24h GROUP BY \"host\"");
+                var result = response.Results[0];
+                var series = result.Series[0];
+                ramUsage = (double)result.Series[0].Rows[0].Fields.Values.ElementAt(0);
+
+            } catch(Exception e)
+            {
+                Console.WriteLine("GetRAMUsageAverage24h : " + e.Message);
+            }
+
+            return ramUsage;
         }
         
         /// <summary>
@@ -153,7 +165,6 @@ namespace ILBSYS
         /// <returns>string array of hostnames on the server</returns>
         static public async Task<List<Host>> GetAllHostsAsync()
         {
-            Console.WriteLine("Starting");
             InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
             //var response = client.ReadAsync<DynamicInfluxRow>("telegraf", "SHOW TAG VALUES WITH KEY=host");
             var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT last(\"uptime\") FROM \"system\" GROUP BY \"host\"");
