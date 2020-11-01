@@ -131,9 +131,26 @@ namespace ILBSYS
         /// Gets in the database the cpu usage over the last 6 hours
         /// </summary>
         /// <returns>Array of UsageWithTime containing the points for the last 6 hours of cpu usage</returns>
-        static public UsageWithTime[] GetCPUUsageAverage24h()
+        static public async Task<Double> GetCPUUsageAverage24h()
         {
-            return new UsageWithTime[0];
+            double cpuUsage = 0.0;
+            try
+            {
+                InfluxClient client = new InfluxClient(new Uri(CurrentServerAddress));
+                var response = await client.ReadAsync<DynamicInfluxRow>("telegraf", "SELECT mean(\"usage_idle\") FROM \"cpu\" WHERE  (\"cpu\" = \'cpu-total\' AND \"host\" =\'" + CurrentHost + "\') AND time >= now() - 24h");
+                var result = response.Results[0];
+                var series = result.Series[0];
+                cpuUsage = (double)result.Series[0].Rows[0].Fields.Values.ElementAt(0);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("GetRAMUsageAverage24h : " + e.Message);
+            }
+
+            // Change the usage from idle to utilization
+            cpuUsage = cpuUsage * -1 + 100;
+            return cpuUsage;
         }
 
         /// <summary>

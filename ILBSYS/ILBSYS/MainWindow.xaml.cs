@@ -130,6 +130,10 @@ namespace ILBSYS
             double ramUsage24h = await InfluxDB.GetRAMUsageAverage24h();
             infos.Add(new Info("Average RAM usage (24h)", ramUsage24h.ToString().Substring(0, 4) + "%"));
 
+            // CPU usage average over 24h
+            double cpuUsage24h = await InfluxDB.GetCPUUsageAverage24h();
+            infos.Add(new Info("Average CPU Usage (24h)", cpuUsage24h.ToString().Substring(0, 4) + "%"));
+
             dgPCInfo.ItemsSource = infos;
         }
 
