@@ -115,7 +115,7 @@ namespace ILBSYS
             
             // Uptime
             int uptime = await InfluxDB.GetUptime();
-            int uptimeHours = uptime / 1000 / 60 / 60;
+            int uptimeHours = uptime / 60 / 60;
             infos.Add(new Info("Uptime", uptimeHours.ToString() + " hours"));
 
             // CPU usage
