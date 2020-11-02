@@ -1,0 +1,29 @@
+@startuml
+participant Client
+participant "Application WPF" as App
+participant InfluxDB
+
+== Ajout serveur ==
+Client -> App : Ajout server
+activate App
+Client <- App : Ouvre fenêtre
+deactivate App
+activate Client
+Client -> App : Entre les données et confirme
+deactivate Client
+App -> InfluxDB : Requête list des hôtes
+activate InfluxDB
+App <- InfluxDB : Renvoie des hôts
+deactivate InfluxDB
+Client <- App : Affiche la liste des hôtes
+== Sélection de l'hôte ==
+Client -> App : Séléctionne un hôte
+Activate App
+App -> InfluxDB : Demande information pour l'hôte
+activate InfluxDB
+App <- InfluxDB : Renvoie des informations
+deactivate InfluxDB
+Client <- App : Affichage des informations
+deactivate App
+
+@enduml

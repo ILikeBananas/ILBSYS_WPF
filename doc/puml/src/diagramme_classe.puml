@@ -1,0 +1,67 @@
+@startuml
+class MainWindow extends Window {
+    + MainWindow()
+    + async UpdateHostList() : void
+    - cbServers_SelectionChanged(sender: Object, e: SelectionChangedEventArgs): void
+    - Btn_AddServer_Click(sender: object, e: RoutedEventArgs): void
+    + PopulateServerList(): void
+    + async UpdateInfoDataGrid(): void
+    - dgHosts_SelectionChanged(sender: object, e: SelectionChangedEventArgs): void
+}
+
+class Host {
+    + Name: string 
+    + Host(name: string)
+}
+
+class Info {
+    + Name: string
+    + Value: string
+    + Info(name:string, value: string)
+
+}
+
+class InfluxDB {
+    - {static} CurrentServerAddress: string
+    - {static} CurrentServerName: string
+    - {static} CurrentHost: string
+    + {static} SetCurrentServerAddress(address: string): void
+    + {static} SetCurrentServerName(name: string): void
+    + {static} SetCurrentHost(host: string): void
+    + {static} async GetRamUsage(): Task<Double>
+    + {static} async GetCPUUsage(): Task<Double>
+    + {static} async GetUptime(): Task<int>
+    + {static} async GetCPUUsageAverage24h(): Task<Double>
+    + {static} async GetRAMUsageAverage24h(): Task<Double>
+    + {static} async GetAllHostsAsync(): Task<List<Host>>
+}
+
+class Server {
+    + Address: string
+    + Name: string
+    + Server(name: string, address: string)
+}
+
+class Utilities {
+    - {static} Servers: List<Server>
+    - {static} SelectedServerIndex: int
+    - {static} HostsUpdated: bool
+    - {static} Hosts: List<Host>
+
+    + {static} GetAllServers(): List<Server>
+    + {static} AddServer(server: Server): void
+    + {static} GetSelectedServerIndex(): int
+    + {static} SetSelectedServerIndex(index: int): void
+    + {static} GetSelectedServer(): Server
+    + {static} DeleteServer(index: int): void
+    + {static} async GetAllHostsAsync(): Task<List<Host>>
+    + {static} SetCorruntHost(name: string): void
+}
+
+Utilities *-- Server
+Utilities *-- Host
+MainWindow *-- Info
+InfluxDB *-- Host
+
+
+@enduml

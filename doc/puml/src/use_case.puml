@@ -1,0 +1,15 @@
+@startuml
+left to right direction
+actor Client
+package "Application WPF" {
+    usecase "Ajouter hôtes" as ajout
+    usecase  "Sélectionner hôtes" as selection
+    usecase "Regarder informations" as regarder
+    (Remplir formulaire) .> (ajout) : extends
+}
+
+Client -- ajout
+Client -- selection
+Client -- regarder
+
+@enduml
