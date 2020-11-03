@@ -24,8 +24,11 @@ namespace ILBSYS
         public MainWindow()
         {
             InitializeComponent();
-            //Utilities.AddServer(new Server("tower", "http://192.168.1.3:8086"));
+
+            // Updating the host list
             this.UpdateHostList();
+
+            // Updating the server list
             this.PopulateServerList();
 
 
