@@ -15,14 +15,6 @@ using Vibrant.InfluxDB.Client.Rows;
 
 namespace ILBSYS
 {
-    /// <summary>
-    /// Structure for usage over time, will be used as an array
-    /// </summary>
-    struct UsageWithTime {
-        public string Timestamp { get; set; }
-        public double Usage { get; set; }
-    }
-
     static class InfluxDB
     {
         static private string CurrentServerAddress;
@@ -128,9 +120,9 @@ namespace ILBSYS
         }
 
         /// <summary>
-        /// Gets in the database the cpu usage over the last 6 hours
+        /// Gets in the database the average cpu usage over 24h
         /// </summary>
-        /// <returns>Array of UsageWithTime containing the points for the last 6 hours of cpu usage</returns>
+        /// <returns>Average CPU usage over 24 hours</returns>
         static public async Task<Double> GetCPUUsageAverage24h()
         {
             double cpuUsage = 0.0;
@@ -154,9 +146,9 @@ namespace ILBSYS
         }
 
         /// <summary>
-        /// Gets in the database the ram usage over the last 6 hours
+        /// Gets in the database the average RAM usage over 24 hours
         /// </summary>
-        /// <returns>Array of UsageWithTime containing the points for the last 6 hours of ram usage</returns>
+        /// <returns>Average RAM usage over 24 hours</returns>
         static public async Task<Double> GetRAMUsageAverage24h()
         {
             double ramUsage = 0.0;
@@ -195,23 +187,5 @@ namespace ILBSYS
 
             return hosts;
         }
-    }
-
-    /// <summary>
-    /// Class to stock computer infos
-    /// </summary>
-    public class ComputerInfo
-    {
-        [InfluxTimestamp]
-        public DateTime TimeStamp { get; set; }
-
-        [InfluxTag("host")]
-        public string Host { get; set; }
-
-        [InfluxField("cpu")]
-        public double CPU { get; set; }
-
-        [InfluxField("ram")]
-        public long RAM { get; set; }
     }
 }
